@@ -86,9 +86,9 @@ function carritoHTML() {
         <p>${producto.titulo}</p>
         <p>${producto.precio}</p>
         <p>${producto.cantidad}</p>
-        <p>${producto.cantidad*producto.precio}</p>
+        <p>${producto.cantidad*parseFloat(producto.precio)}mill. € </p>
         `;
-        total=total+producto.cantidad*producto.precio;
+        total=total+producto.cantidad*parseFloat(producto.precio);
         contenedorCarrito.appendChild(fila);
     })
     // GENERA EL TOTAL DEL CARRITO
@@ -146,7 +146,7 @@ function pintarHTML(producto) {
         <h4>${producto.id}</h4>
         <h3>${producto.titulo}</h3>
         <h5>${producto.descripcion}</h5>
-        <p>${producto.precio}</p>
+        <p>${producto.precio+"mill. € "}</p>
         <button class="agregar-carrito"> Agregar al Carrito </button>
         `;
         fila.appendChild(imagen);
