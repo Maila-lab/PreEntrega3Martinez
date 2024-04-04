@@ -56,16 +56,26 @@ form label input::placeholder {
 }
 
 
-form .link {
-    color: #2802ff;
-    margin-bottom: 30px;
+.registro {
+    padding: 30px 0 0;
+    text-align: start;
+    font-size: 1.2rem;
+    font-family: 'Times New Roman', Times, serif;
+}
+form .link{
+    color: blue;
 }
 
 form button {
     color: #fff;
     border: none;
     background: linear-gradient(to right, #cb232c, #ce1d61);
-    padding: 10px 15px;
+    padding: 10px 15px ;
     cursor: pointer;
     font-size: 25px;
+}
+
+.fa-error-solid {
+    font-display: 10rem;
+    background-color: #cb232c;
 }

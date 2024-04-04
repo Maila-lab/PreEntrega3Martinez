@@ -1,13 +1,15 @@
 const inputUsername = document.getElementById('username'),
     inputPassword = document.getElementById('password'),
     checkbox = document.querySelector("#check"),
-    btnEntrar = document.getElementById('button');
+    btnEntrar = document.getElementById('button')
+    contenedorForm = document.querySelector('.fa-error-solid');  
 
 // SECTOR DE LOS USUARIOS
 class Usuario{
     constructor(username,password){
         this.username=username;
         this.password=password;
+        
     }
 }
 
@@ -37,6 +39,7 @@ function guardarEnLS(storage){
 
 }
 
+// ACCION DEL BOTON DE ENTRAR
 btnEntrar.addEventListener('click', (e) => {
     e.preventDefault()
     const data = {
@@ -56,7 +59,13 @@ btnEntrar.addEventListener('click', (e) => {
             window.open("menu.html")
         }else{
             // MENSAJE DE ERROR
-            alert("ERROR, EL USUARIO NO EXISTE");
+            const msjError= document.createElement('div');
+            msjError.innerHTML= `
+            <p>${"ERROR, EL USUARIO NO EXISTE"}</p>
+            <p>${"VUELVA A INTENTARLO DE NUEVO"}</p>
+            `;
+            contenedorForm.appendChild(msjError);
+            //alert("ERROR, EL USUARIO NO EXISTE");
             document.getElementById('username').value="";
             document.getElementById('password').value="";
         }    

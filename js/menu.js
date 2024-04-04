@@ -1,8 +1,11 @@
 // variables
 const carrito =document.getElementById("carrito"),
-    listaProductos =document.getElementById("lista-productos"),
     contenedorCarrito = document.querySelector('.buy-card .lista_de_productos'),
-    btnVaciarCarrito = document.querySelector('#vaciar_carrito');
+    btnVaciarCarrito = document.querySelector('#vaciar_carrito'),
+    btnComprarProductos = document.querySelector('#comprar_productos');
+
+const listaProductos =document.getElementById("productos");
+//const card =document.getElementById('card')
 
 // DECLARACION E INICIALIZACION DE VARIABLES USUARIOS
 let articulosCarrito =[];
@@ -16,33 +19,39 @@ function registrarEventsListeners() {
         articulosCarrito = [];
         limpiarHTML()
     })
+
+    btnComprarProductos.addEventListener('click',e =>{
+        alert("comprar");
+    })
 }
 
 // ACCION DEL BOTON AGREGAR AL CARRITO
 function agregarProducto(e) {
     if(e.target.classList.contains("agregar-carrito")){
-        const cursoSeleccionado = e.target.parentElement.parentElement
-        leerInfo(cursoSeleccionado)
+        const productoSeleccionado = e.target.parentElement.parentElement
+       // console.log(productoSeleccionado);
+        leerInfo(productoSeleccionado)
     }
     //AGREGA AL LOCALSTORE
     localStorage.setItem('carritoTer',JSON.stringify(articulosCarrito));
 }
-
-// RECUPERA INFO DE NUESTRO HTML AL QUE LE DIMOS CLICK 
+//RECUPERA INFO DE NUESTRO HTML AL QUE LE DIMOS CLICK 
 function leerInfo(producto) {
-    // CREA UN OBJETO CON EL CONTENIDO DEL PRODUCTO
+    
+     //CREA UN OBJETO CON EL CONTENIDO DEL PRODUCTO
     const infoProducto={
-        imagen: producto.querySelector('img').src,
-        titulo: producto.querySelector('h3').textContent,
-        precio: producto.querySelector('.descuento').textContent,
-        id: producto.querySelector('button').getAttribute('data-id'),
+        imagen: producto.querySelector('div img').src,
+        titulo: producto.querySelector('div h3').innerText,
+        precio: producto.querySelector('div p').innerText,
+        id: producto.querySelector('div h4').innerText,
         cantidad: 1,
     }    
 
-    // VERIFICA SI EL PRODUCTO YA ESTA EN EL CARRITO
+     //VERIFICA SI EL PRODUCTO YA ESTA EN EL CARRITO
     const existe = articulosCarrito.some(producto=>producto.id === infoProducto.id)
+    console.log(articulosCarrito);
     if(existe){
-        // ACTUALIZA LA CANTIDAD
+         //ACTUALIZA LA CANTIDAD
         const productos = articulosCarrito.map(producto => {
             if(producto.id ===infoProducto.id){
                 producto.cantidad++;
@@ -53,11 +62,11 @@ function leerInfo(producto) {
         });
         [...articulosCarrito,infoProducto]
     }else {
-        // AGREGAMOS ELEMENTOS AL CARRITO DE COMPRAS
+         //AGREGAMOS ELEMENTOS AL CARRITO DE COMPRAS
         articulosCarrito = [...articulosCarrito,infoProducto]
     }
 
-    // CALCULA EL TOTAL POR FILA
+     //CALCULA EL TOTAL POR FILA
     let precioFinal=0;
     const total =articulosCarrito.map(producto => {
         precioFinal = precioFinal +(producto.precio*producto.cantidad);
@@ -75,9 +84,9 @@ function carritoHTML() {
         fila.innerHTML=`
         <img src="${producto.imagen}"></img>
         <p>${producto.titulo}</p>
-        <p>${"$"+producto.precio}</p>
+        <p>${producto.precio}</p>
         <p>${producto.cantidad}</p>
-        <p>${"$"+producto.cantidad*producto.precio}</p>
+        <p>${producto.cantidad*producto.precio}</p>
         `;
         total=total+producto.cantidad*producto.precio;
         contenedorCarrito.appendChild(fila);
@@ -96,3 +105,66 @@ function limpiarHTML() {
         contenedorCarrito.removeChild(contenedorCarrito.firstChild)
     }
 }
+
+// SE AGREGO
+//  llama a la funcion 
+document.addEventListener('DOMContentLoaded',()=>{
+    fetchData()
+})
+
+// busca la informacion en el documento json
+const fetchData = async ()=>{
+    pedirProductos();
+    try {
+        const res = await fetch('../json/datos.json');
+        const data = await res.json()   
+        pintarCards(data)
+    } catch (error) {
+        console.log(error);
+    }
+}
+// recorre todos los datos del json para poder pintar en cada tarjeta
+const pintarCards =data =>{
+    console.log(data);
+    productos.innerHTML = ""; 
+    data.forEach(produc => {
+        pintarHTML(produc);
+    })
+}
+
+function pintarHTML(producto) {
+    // RECORRE EL CARRITO Y GENERA LA LISTA DEL CARRITO EN HTML
+    const fila=document.createElement('div'),
+    imagen =document.createElement('div'),
+    infor =document.createElement('div');
+
+        imagen.innerHTML=`
+        <img src="${producto.img}"></img>
+        `;
+
+        infor.innerHTML=`
+        <h4>${producto.id}</h4>
+        <h3>${producto.titulo}</h3>
+        <h5>${producto.descripcion}</h5>
+        <p>${producto.precio}</p>
+        <button class="agregar-carrito"> Agregar al Carrito </button>
+        `;
+        fila.appendChild(imagen);
+        fila.appendChild(infor);
+        listaProductos.appendChild(fila)
+}
+
+
+//INSTANCIO DE PROMESA
+const pedirProductos = () => {
+    productos.innerHTML = `<h2>Cargando....</h2>`;
+    return new Promise((resolve, reject) =>{
+        setTimeout(() => {
+            if(arr){
+                resolve(arr);
+            }else{
+                reject("error de datos");
+            }
+        },5000);
+    })
+};
